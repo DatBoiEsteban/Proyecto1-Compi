@@ -104,4 +104,14 @@ public interface Visitor {
   // Programs
   public abstract Object visitProgram(Program ast, Object o);
 
+  // New Declarations
+  public abstract Object visitForDeclaration(ForDeclaration ast, Object o);
+
+  //New Commands
+  public abstract Object visitUntilCommand (UntilCommand  ast, Object o);
+  public abstract Object visitDoUntilCommand (DoUntilCommand  ast, Object o);
+  public abstract Object visitDoWhileCommand (DoWhileCommand  ast, Object o);
+  public abstract Object visitForCommand (ForCommand  ast, Object o);
+
+
 }
