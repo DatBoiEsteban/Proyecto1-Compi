@@ -14,7 +14,7 @@ public class WriterHTML {
     private String endTag;//Cierre de etiqueta
     private final String estilo =
             "<style>" +
-                    "div.code{ font-family : \"Courier New\", \"Lucida Console\"; font-size : 1em;}\n" +
+                    "div.code{ font-family : \"Deja Vu Sans\"; font-size : 1em;}\n" +
                     "reservedword{font-weight: bold; }\n" +
                     "literal{color: #013ba5;}\n" +
                     "comment{color: #53a501;}" +
@@ -24,7 +24,7 @@ public class WriterHTML {
     public WriterHTML(String fileName) {
         this.fileName = fileName;
         queue = new LinkedList<>();
-        endTag = "";
+        endTag = " ";
         writeHeader();
     }
 
@@ -52,7 +52,7 @@ public class WriterHTML {
                 separator = "<comment>!";
                 break;
             case '\n':
-                separator = "<br>";
+                separator = "<br/>";
                 break;
             case ' ':
                 separator = "&nbsp;";
@@ -69,7 +69,7 @@ public class WriterHTML {
     //Escribe el html
     public void write(String entry, int type) {
         String tag;//Etiqueta
-        if (!endTag.equals(""))//Si no hay más palabras, termina el html
+        if (endTag.equals(""))//Si no hay más palabras, termina el html
             EndTag(endTag);
         //Asigna si es un identificador, literal,comentario o otra palabra según su formato
         switch (type) {
@@ -107,7 +107,7 @@ public class WriterHTML {
         //Etiquetas de cierre
         this.queue.add("</div>");
         this.queue.add("</body>");
-        this.queue.add("</<html>");
+        this.queue.add("</html>");
         try {
             FileWriter fileWriter = new FileWriter(fileName);
             while (!this.queue.isEmpty())//Lo hace si la cola no esté vacía
