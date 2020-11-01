@@ -19,8 +19,8 @@ import Triangle.ErrorReporter;
 
 public class Parser {
 
-  private Scanner lexicalAnalyser;
-  private ErrorReporter errorReporter;
+  private final Scanner lexicalAnalyser;
+  private final ErrorReporter errorReporter;
   private Token currentToken;
   private SourcePosition previousTokenPosition;
 

@@ -758,9 +758,9 @@ public final class Checker implements Visitor {
     establishStdEnvironment();
   }
 
-  private IdentificationTable idTable;
-  private static SourcePosition dummyPos = new SourcePosition();
-  private ErrorReporter reporter;
+  private final IdentificationTable idTable;
+  private static final SourcePosition dummyPos = new SourcePosition();
+  private final ErrorReporter reporter;
 
   // Reports that the identifier or operator used at a leaf of the AST
   // has not been declared.

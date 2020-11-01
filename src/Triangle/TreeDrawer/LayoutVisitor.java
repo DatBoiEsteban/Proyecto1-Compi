@@ -23,7 +23,7 @@ public class LayoutVisitor implements Visitor {
   private final int BORDER = 5;
   private final int PARENT_SEP = 30;
 
-  private FontMetrics fontMetrics;
+  private final FontMetrics fontMetrics;
 
   public LayoutVisitor (FontMetrics fontMetrics) {
     this.fontMetrics = fontMetrics;

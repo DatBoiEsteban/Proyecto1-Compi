@@ -12,7 +12,7 @@ import java.io.InputStream;
  * This class is used to redirect the console input. 
  * When the console expects for an input, an event is fired.
  *
- * @author Luis Leopoldo Pérez <luiperpe@ns.isi.ulatina.ac.cr>
+ * @author Luis Leopoldo Pï¿½rez <luiperpe@ns.isi.ulatina.ac.cr>
  */
 public class InputRedirector extends InputStream {
     
@@ -58,7 +58,7 @@ public class InputRedirector extends InputStream {
     
     // <editor-fold defaultstate="collapsed" desc=" Attributes ">    
 
-    private ActionListener delegate;    // Gets triggered when the console is expecting for an input.    
+    private final ActionListener delegate;    // Gets triggered when the console is expecting for an input.
     private String input = "";          // The console input.
     private int count = 0;              // The actual byte count.
     // </editor-fold>

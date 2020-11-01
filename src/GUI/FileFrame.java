@@ -22,7 +22,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * File Frame. Contains the source edition text box, console, ASTs and 
  * everything else in an edition window.
  * 
- * @author Luis Leopoldo Pérez <luiperpe@ns.isi.ulatina.ac.cr>
+ * @author Luis Leopoldo Pï¿½rez <luiperpe@ns.isi.ulatina.ac.cr>
  */
 public class FileFrame extends javax.swing.JInternalFrame {
     
@@ -147,7 +147,7 @@ public class FileFrame extends javax.swing.JInternalFrame {
     public void pasteText(String text) {        
         if ((tabbedPane.getSelectedComponent().getName().compareTo("sourceScroll")) == 0) {
             int caretPosition = sourcePane.getCaretPosition();
-            sourcePane.setText(sourcePane.getText().substring(0, sourcePane.getSelectionStart()) + text + sourcePane.getText().substring(sourcePane.getSelectionEnd(), sourcePane.getText().length()));
+            sourcePane.setText(sourcePane.getText().substring(0, sourcePane.getSelectionStart()) + text + sourcePane.getText().substring(sourcePane.getSelectionEnd()));
             sourcePane.setCaretPosition(caretPosition);
         }
     }
@@ -158,7 +158,7 @@ public class FileFrame extends javax.swing.JInternalFrame {
     public void cutText() {
         if ((tabbedPane.getSelectedComponent().getName().compareTo("sourceScroll")) == 0) {
             int caretPosition = sourcePane.getCaretPosition();
-            sourcePane.setText(sourcePane.getText().substring(0, sourcePane.getSelectionStart()) + sourcePane.getText().substring(sourcePane.getSelectionEnd(), sourcePane.getText().length()));
+            sourcePane.setText(sourcePane.getText().substring(0, sourcePane.getSelectionStart()) + sourcePane.getText().substring(sourcePane.getSelectionEnd()));
             sourcePane.setCaretPosition(caretPosition);
         }
     }

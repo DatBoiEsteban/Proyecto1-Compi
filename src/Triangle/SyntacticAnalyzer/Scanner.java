@@ -17,12 +17,14 @@ package Triangle.SyntacticAnalyzer;
 
 public final class Scanner {
 
-  private SourceFile sourceFile;
+  private final SourceFile sourceFile;
   private boolean debug;
 
   private char currentChar;
   private StringBuffer currentSpelling;
   private boolean currentlyScanningToken;
+  private WriterHTML writer;
+  private boolean writing;
 
   private boolean isLetter(char c) {
     return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
@@ -47,11 +49,22 @@ public final class Scanner {
   public Scanner(SourceFile source) {
     sourceFile = source;
     currentChar = sourceFile.getSource();
+    this.writing = false;
     debug = false;
   }
 
   public void enableDebugging() {
     debug = true;
+  }
+
+  public void enableWriting(String pFilename){
+    this.writing = true;
+    writer = new WriterHTML(pFilename);
+  }
+
+  public void finishWriting(){
+    this.writing = false;
+    writer.save();
   }
 
   // takeIt appends the current character to the current token, and gets
@@ -60,6 +73,8 @@ public final class Scanner {
   private void takeIt() {
     if (currentlyScanningToken)
       currentSpelling.append(currentChar);
+    else if (this.writing)
+      writer.writeSeparator(currentChar);//agrega el separador de palabra en html
     currentChar = sourceFile.getSource();
   }
 
@@ -72,6 +87,7 @@ public final class Scanner {
         takeIt();
         while ((currentChar != SourceFile.EOL) && (currentChar != SourceFile.EOT))
           takeIt();
+        writer.EndTag("comment");
         if (currentChar == SourceFile.EOL)
           takeIt();
       }
@@ -199,7 +215,7 @@ public final class Scanner {
       scanSeparator();
 
     currentlyScanningToken = true;
-    currentSpelling = new StringBuffer("");
+    currentSpelling = new StringBuffer();
     pos = new SourcePosition();
     pos.start = sourceFile.getCurrentLine();
 
@@ -207,6 +223,9 @@ public final class Scanner {
 
     pos.finish = sourceFile.getCurrentLine();
     tok = new Token(kind, currentSpelling.toString(), pos);
+    if(this.writing){
+      writer.write(tok.spelling, tok.kind);
+    }
     if (debug)
       System.out.println(tok);
     return tok;

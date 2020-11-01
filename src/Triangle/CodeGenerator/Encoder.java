@@ -695,7 +695,7 @@ public final class Encoder implements Visitor {
     elaborateStdEnvironment();
   }
 
-  private ErrorReporter reporter;
+  private final ErrorReporter reporter;
 
   // Generates code to run a program.
   // showingTable is true iff entity description details

@@ -23,5 +23,5 @@ class Polyline {
 	this.dy = dy;
 	this.link = link;
     }
-};
+}
 
