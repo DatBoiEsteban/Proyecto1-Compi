@@ -1,8 +1,6 @@
 package Triangle.SyntacticAnalyzer;
 
 
-import Triangle.SyntacticAnalyzer.Token;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -12,13 +10,6 @@ public class WriterHTML {
     private final String fileName;//Nombre archivo
     private final Queue<String> queue;//Cola de tipo string, se ingresa el html
     private String endTag;//Cierre de etiqueta
-    private final String estilo =
-            "<style>" +
-                    "div.code{ font-family : \"Deja Vu Sans\"; font-size : 1em;}\n" +
-                    "reservedword{font-weight: bold; }\n" +
-                    "literal{color: #013ba5;}\n" +
-                    "comment{color: #53a501;}" +
-                    "</style>";//Se presenta el estilo que contiene el html, así los colores de las asignaciones solicitadas
 
     //Inicialización del html con el nombre del archivo
     public WriterHTML(String fileName) {
@@ -33,6 +24,13 @@ public class WriterHTML {
         this.queue.add("<!DOCTYPE html> <html>");
         this.queue.add("<head>\n");
         this.queue.add("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">");
+        //Se presenta el estilo que contiene el html, así los colores de las asignaciones solicitadas
+        String estilo = "<style>" +
+                "div.code{ font-family : \"Deja Vu Sans\"; font-size : 1em;}\n" +
+                "reservedword{font-weight: bold; }\n" +
+                "literal{color: #013ba5;}\n" +
+                "comment{color: #53a501;}" +
+                "</style>";
         this.queue.add(estilo);
         this.queue.add("</head>");
         this.queue.add("<body>");
@@ -46,23 +44,13 @@ public class WriterHTML {
 
     //Asigna su correspondiente en html según como termina la palabra
     public void writeSeparator(char caracter) {
-        String separator;
-        switch (caracter) {
-            case '!':
-                separator = "<comment>!";
-                break;
-            case '\n':
-                separator = "<br/>";
-                break;
-            case ' ':
-                separator = "&nbsp;";
-                break;
-            case '\t':
-                separator = "<span class=\"mtk1\">&nbsp;&nbsp;</span>";
-                break;
-            default:
-                separator = Character.toString(caracter);
-        }
+        String separator = switch (caracter) {
+            case '!' -> "<comment>!";
+            case '\n' -> "<br/>";
+            case ' ' -> "&nbsp;";
+            case '\t' -> "<span class=\"mtk1\">&nbsp;&nbsp;</span>";
+            default -> Character.toString(caracter);
+        };
         this.queue.add(separator);
     }
 
@@ -98,7 +86,7 @@ public class WriterHTML {
                     tag = "identifier";
         }
 
-        this.queue.add(String.format("<%s>%s</%s>", tag, entry, tag));
+        this.queue.add(String.format("<%s>%s</%s>\n", tag, entry, tag));
         endTag = tag;
     }
 

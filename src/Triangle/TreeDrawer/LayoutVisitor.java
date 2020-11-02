@@ -138,6 +138,16 @@ public class LayoutVisitor implements Visitor {
     return layoutBinary("VarDecl.", ast.I, ast.T);
   }
 
+  @Override
+  public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) { //TODO;
+    return null;
+  }
+
+  @Override
+  public Object vistiLocalDeclaration(LocalDeclaration ast, Object o) {// TODO;
+    return null;
+  }
+
 
   // Array Aggregates
   public Object visitMultipleArrayAggregate(MultipleArrayAggregate ast, Object obj) {

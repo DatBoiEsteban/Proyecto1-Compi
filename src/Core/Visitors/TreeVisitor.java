@@ -135,6 +135,16 @@ public class TreeVisitor implements Visitor {
     public Object visitVarDeclaration(VarDeclaration ast, Object obj) {
         return(createBinary("Variable Declaration", ast.I, ast.T));
     }
+
+    @Override
+    public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) { // TODO;
+        return (createBinary( "Initialized Variable Declaration", ast.I, ast.E));
+    }
+
+    @Override
+    public Object vistiLocalDeclaration(LocalDeclaration ast, Object o) { // TODO;
+        return (createBinary("Local Declaration", ast.d1, ast.d2));
+    }
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc=" Aggregates ">

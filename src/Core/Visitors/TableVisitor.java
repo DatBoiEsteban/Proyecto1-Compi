@@ -246,8 +246,18 @@ public class TableVisitor implements Visitor {
       ast.T.visit(this, null);
       return(null);
   }
-  
-  // </editor-fold>
+
+    @Override
+    public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) { // TODO;
+        return null;
+    }
+
+    @Override
+    public Object vistiLocalDeclaration(LocalDeclaration ast, Object o) { // TODO;
+        return null;
+    }
+
+    // </editor-fold>
 
   // <editor-fold defaultstate="collapsed" desc=" Aggregates ">
   // Array Aggregates

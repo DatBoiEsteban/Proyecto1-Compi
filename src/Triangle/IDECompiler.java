@@ -73,7 +73,7 @@ public class IDECompiler {
         else
             System.out.println("Compilation was unsuccessful.");
         Writer w = new Writer(sourceName,"astTree.xml");
-        w.write(getAST());
+        //w.write(getAST());
         return(success);
     }
       
