@@ -12,7 +12,7 @@ public class WriterHTML {
     private String endTag;//Cierre de etiqueta
 
     //Inicialización del html con el nombre del archivo
-    public WriterHTML(String fileName) {
+    public WriterHTML(String fileName) {// TODO
         this.fileName = fileName;
         queue = new LinkedList<>();
         endTag = " ";

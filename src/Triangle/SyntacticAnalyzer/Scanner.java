@@ -23,8 +23,8 @@ public final class Scanner {
     private char currentChar;
     private StringBuffer currentSpelling;
     private boolean currentlyScanningToken;
-    private WriterHTML writer;
-    private boolean writing;
+    private WriterHTML writer;// TODO
+    private boolean writing;// TODO
 
     private boolean isLetter(char c) {
         return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
@@ -49,7 +49,7 @@ public final class Scanner {
     public Scanner(SourceFile source) {
         sourceFile = source;
         currentChar = sourceFile.getSource();
-        this.writing = false;
+        this.writing = false;// TODO
         debug = false;
     }
 
@@ -57,12 +57,12 @@ public final class Scanner {
         debug = true;
     }
 
-    public void enableWriting(String pFilename) {
+    public void enableWriting(String pFilename) {// TODO
         this.writing = true;
         writer = new WriterHTML(pFilename);
     }
 
-    public void finishWriting() {
+    public void finishWriting() {// TODO
         this.writing = false;
         writer.save();
     }
@@ -82,7 +82,7 @@ public final class Scanner {
 
     private void scanSeparator() {
         switch (currentChar) {
-            case '!': {
+            case '!' -> {
                 takeIt();
                 while ((currentChar != SourceFile.EOL) && (currentChar != SourceFile.EOT))
                     takeIt();
@@ -90,14 +90,7 @@ public final class Scanner {
                 if (currentChar == SourceFile.EOL)
                     takeIt();
             }
-            break;
-
-            case ' ':
-            case '\n':
-            case '\r':
-            case '\t':
-                takeIt();
-                break;
+            case ' ', '\n', '\r', '\t' -> takeIt();
         }
     }
 
@@ -208,7 +201,7 @@ public final class Scanner {
                 takeIt();
                 if (currentChar == '.') {
                     takeIt();
-                    return Token.DOUBLEDOT;
+                    return Token.DOUBLEDOT;// TODO
                 } else
                     return Token.DOT;
 
@@ -228,7 +221,7 @@ public final class Scanner {
                 takeIt();
                 return Token.COMMA;
 
-            case '~':
+            case '~':// TODO
                 takeIt();
                 return Token.IS;
 
@@ -256,7 +249,7 @@ public final class Scanner {
                 takeIt();
                 return Token.RCURLY;
 
-            case '|':
+            case '|':// TODO
                 takeIt();
                 return Token.PIPE;
 

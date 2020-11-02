@@ -200,7 +200,7 @@ public class Parser {
         return commandAST;
     }
 
-    ForDeclaration parseForDeclaration() throws SyntaxError {
+    ForDeclaration parseForDeclaration() throws SyntaxError {//  TODO
         ForDeclaration declarationAST = null; // in case there's a syntactic error
         SourcePosition declarationPos = new SourcePosition();
         start(declarationPos);
@@ -212,7 +212,7 @@ public class Parser {
         return declarationAST;
     }
 
-    Command parseRestOfIf() throws SyntaxError {
+    Command parseRestOfIf() throws SyntaxError {// TODO
         Command commandAST = null;
         SourcePosition commandPos = new SourcePosition();
 
@@ -247,7 +247,7 @@ public class Parser {
         return commandAST;
     }
 
-    Command parseSingleCommand() throws SyntaxError {
+    Command parseSingleCommand() throws SyntaxError {// TODO
         Command commandAST = null; // in case there's a syntactic error
 
         SourcePosition commandPos = new SourcePosition();
@@ -255,7 +255,7 @@ public class Parser {
 
         switch (currentToken.kind) {
 
-            case Token.IDENTIFIER: {
+            case Token.IDENTIFIER: {// TODO
                 Identifier iAST = parseIdentifier();
                 if (currentToken.kind == Token.LPAREN) {
                     acceptIt();
@@ -281,11 +281,11 @@ public class Parser {
       accept(Token.END);
       break;
 */
-            case Token.LOOP: //
+            case Token.LOOP: // TODO
             {
                 acceptIt(); //
                 switch (currentToken.kind) {
-                    case Token.WHILE: //"loop" "while" Expression "do" Command "repeat"
+                    case Token.WHILE: //"loop" "while" Expression "do" Command "repeat" TODO
                     { //
                         acceptIt(); //
                         Expression eAST = parseExpression(); //
@@ -296,7 +296,7 @@ public class Parser {
                         commandAST = new WhileCommand(eAST, cAST, commandPos);             //
                     }//
                     break;//
-                    case Token.UNTIL://|"loop" "until" Expression "do" Command "repeat"
+                    case Token.UNTIL://|"loop" "until" Expression "do" Command "repeat" TODO
                     {//
                         acceptIt();//
                         Expression eAST = parseExpression();//
@@ -307,7 +307,7 @@ public class Parser {
                         commandAST = new UntilCommand(eAST, cAST, commandPos); //
                     }//
                     break;//
-                    case Token.FOR: //|"loop" "for" Identifier "~"Expression "to" Expression "do" Command "repeat"
+                    case Token.FOR: //|"loop" "for" Identifier "~"Expression "to" Expression "do" Command "repeat" TODO
                     {// la expresin 1 se evalua una sola vez antes de comenzar a itera, el valor de la exprecin 1 es el inicial
                         // del indentiricador, Si el valor inicial supera al de la segunda expresin, no se ejecuta ninguna vez el comando
                         // solo se evaluan nicamente las expresiones una vez y el identificador tiene que estar dentro del rango osea <=
@@ -324,7 +324,7 @@ public class Parser {
                     }
                     break;    //
 
-                    case Token.DO: { //
+                    case Token.DO: { // TODO
                         acceptIt();
                         Command cAST = parseCommand(); //
                         if ((currentToken.kind != Token.WHILE) && (currentToken.kind != Token.UNTIL)) {//
@@ -354,7 +354,7 @@ public class Parser {
             break;
 
 
-            case Token.LET: {
+            case Token.LET: { // TODO
                 acceptIt();
                 Declaration dAST = parseDeclaration();
                 accept(Token.IN);
@@ -365,7 +365,7 @@ public class Parser {
             }
             break;
 
-            case Token.IF: {
+            case Token.IF: { //  TODO
                 acceptIt();
                 Expression eAST = parseExpression();
                 accept(Token.THEN);
@@ -389,7 +389,7 @@ public class Parser {
       }
       break;
 */
-            case Token.SKIP: // creación de Skip
+            case Token.SKIP: // creación de Skip  TODO
             {
                 acceptIt();
                 finish(commandPos);
@@ -640,7 +640,7 @@ public class Parser {
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-    Declaration parseDeclaration() throws SyntaxError {
+    Declaration parseDeclaration() throws SyntaxError {// TODO
         Declaration declarationAST = null; // in case there's a syntactic error
 
         SourcePosition declarationPos = new SourcePosition();
@@ -656,12 +656,12 @@ public class Parser {
         return declarationAST;
     }
 
-    Declaration parseSingleDeclaration() throws SyntaxError {
+    Declaration parseSingleDeclaration() throws SyntaxError {// TODO
         Declaration declarationAST = null; // in case there's a syntactic error
 
         SourcePosition declarationPos = new SourcePosition();
         start(declarationPos);
-        switch (currentToken.kind) { // todo cambiar esta pinga porque Salas se caga
+        switch (currentToken.kind) {
             case Token.CONST -> {
                 acceptIt();
                 Identifier iAST = parseIdentifier();
@@ -678,7 +678,7 @@ public class Parser {
                     TypeDenoter tAST = parseTypeDenoter();
                     finish(declarationPos);
                     declarationAST = new VarDeclaration(iAST, tAST, declarationPos);
-                } else if (currentToken.kind == Token.BECOMES) {
+                } else if (currentToken.kind == Token.BECOMES) { // Se agrega el cambio para utilizar una variable que no haya sido previamente declarada TODO
                     acceptIt();
                     Expression eAST = parseExpression();
                     finish(declarationPos);
@@ -686,7 +686,7 @@ public class Parser {
                 }
 
             }
-            case Token.PROC -> {
+            case Token.PROC -> { // TODO
                 acceptIt();
                 Identifier iAST = parseIdentifier();
                 accept(Token.LPAREN);
@@ -698,7 +698,7 @@ public class Parser {
                 finish(declarationPos);
                 declarationAST = new ProcDeclaration(iAST, fpsAST, cAST, declarationPos);
             }
-            case Token.FUNC -> {
+            case Token.FUNC -> { // TODO
                 acceptIt();
                 Identifier iAST = parseIdentifier();
                 accept(Token.LPAREN);
@@ -726,7 +726,7 @@ public class Parser {
         return declarationAST;
     }
 
-    Declaration parseProcFuncDeclaration() throws SyntaxError {
+    Declaration parseProcFuncDeclaration() throws SyntaxError { // Se genera el parseo de los procedimientos de Proc y Func TODO
         Declaration declarationAST = null;
 
         SourcePosition declarationPos = new SourcePosition();
@@ -763,7 +763,7 @@ public class Parser {
         return declarationAST;
     }
 
-    Declaration parseProcFuncsDeclaration() throws SyntaxError {
+    Declaration parseProcFuncsDeclaration() throws SyntaxError { // Se genera el parseo de multiples Procs o Funcs separados por un PIPE (|) TODO
         Declaration declarationAST = null;
         SourcePosition declarationPos = new SourcePosition();
         start(declarationPos);
@@ -774,7 +774,7 @@ public class Parser {
         return declarationAST;
     }
 
-    Declaration parseRestOfProcFuncsDeclaration() throws SyntaxError {
+    Declaration parseRestOfProcFuncsDeclaration() throws SyntaxError { // Se genera el parseo de ( "|" ProcFunc )+ TODO
         Declaration declarationAST = null;
         SourcePosition declarationPos = new SourcePosition();
         start(declarationPos);
@@ -785,19 +785,18 @@ public class Parser {
         return declarationAST;
     }
 
-    Declaration parseCompoundDeclaration() throws SyntaxError {
+    Declaration parseCompoundDeclaration() throws SyntaxError { // Se genera el parseo de el nuevo Compound Declaration TODO
         Declaration declarationAST = null;
 
         SourcePosition declarationPos = new SourcePosition();
         start(declarationPos);
         switch (currentToken.kind) {
-            case Token.RECURSIVE: {
+            case Token.RECURSIVE -> {
                 acceptIt();
                 declarationAST = parseProcFuncsDeclaration();
                 accept(Token.END);
             }
-            break;
-            case Token.LOCAL: {
+            case Token.LOCAL -> {
                 acceptIt();
                 Declaration d2AST = parseDeclaration();
                 accept(Token.IN);
@@ -805,18 +804,10 @@ public class Parser {
                 accept(Token.END);
                 declarationAST = new LocalDeclaration(d2AST, d3AST, declarationPos);
             }
-            break;
-            case Token.CONST:
-            case Token.VAR:
-            case Token.PROC:
-            case Token.FUNC:
-            case Token.TYPE: {
+            case Token.CONST, Token.VAR, Token.PROC, Token.FUNC, Token.TYPE -> {
                 declarationAST = parseSingleDeclaration();
             }
-            break;
-            default:
-                syntacticError("\"%\" cannot start a declaration", currentToken.spelling);
-                break;
+            default -> syntacticError("\"%\" cannot start a declaration", currentToken.spelling);
         }
         return declarationAST;
     }

@@ -5,7 +5,7 @@ import Triangle.AbstractSyntaxTrees.*;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class WriterVisitor implements Visitor {
+public class WriterVisitor implements Visitor {// TODO
 
     private final FileWriter fileWriter;
 

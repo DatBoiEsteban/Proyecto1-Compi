@@ -58,7 +58,7 @@ final class Token extends Object {
 
   // Token classes...
 
-  public static final int
+  public static final int // TODO
 
     // literals, identifiers, operators...
     INTLITERAL	= 0,
@@ -120,7 +120,7 @@ final class Token extends Object {
     EOT			= 47,
     ERROR		= 48;
 
-  private static final String[] tokenTable = new String[] {
+  private static final String[] tokenTable = new String[] { // TODO
     "<int>",
     "<char>",
     "<identifier>",
@@ -173,11 +173,11 @@ final class Token extends Object {
     "<error>"
   };
 
-  private final static int	firstReservedWord = Token.ARRAY,
+  private final static int	firstReservedWord = Token.ARRAY, // TODO
   				lastReservedWord  = Token.WHILE;
 
   public static int getLastReservedWord() {
     return lastReservedWord;
-  }
+  }// TODO
 
 }
