@@ -207,8 +207,7 @@ public class Parser {
         start(commandPos);
 
         switch (currentToken.kind) {
-
-            case Token.ELSEIF: {
+            case Token.ELSEIF -> {
                 acceptIt();
                 Expression eAST = parseExpression();
                 accept(Token.THEN);
@@ -217,19 +216,13 @@ public class Parser {
                 finish(commandPos);
                 commandAST = new IfCommand(eAST, c1AST, c2AST, commandPos);
             }
-            break;
-
-            case Token.ELSE: {
+            case Token.ELSE -> {
                 acceptIt();
                 commandAST = parseCommand();
                 accept(Token.END);
                 finish(commandPos);
             }
-            break;
-
-            default:
-                syntacticError("\"%\" cannot start a command", currentToken.spelling); //TODO
-                break;
+            default -> syntacticError("\"%\" cannot end if, expected \"else\" or \"elseif\"", currentToken.spelling);
         }
         return commandAST;
     }
@@ -707,7 +700,7 @@ public class Parser {
         return declarationAST;
     }
 
-    Declaration parseProcFuncDeclaration() throws SyntaxError { // Se genera el parseo de los procedimientos de Proc y Func TODO
+    Declaration parseProcFuncDeclaration() throws SyntaxError { // Se genera el parseo de los procedimientos de Proc y Func
         Declaration declarationAST = null;
 
         SourcePosition declarationPos = new SourcePosition();

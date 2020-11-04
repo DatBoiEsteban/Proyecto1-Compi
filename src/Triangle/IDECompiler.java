@@ -43,8 +43,8 @@ public class IDECompiler {
 
         System.out.println("Syntactic Analysis ...");
         SourceFile source = new SourceFile(sourceName);
-        Scanner scanner = new Scanner(source);// TODO
-        scanner.enableWriting(sourceName.replace(".tri", ".html"));// TODO
+        Scanner scanner = new Scanner(source);
+        scanner.enableWriting(sourceName.replace(".tri", ".html"));// Se genera el nombre del archivo HTML
         report = new IDEReporter();
         Parser parser = new Parser(scanner, report);
         boolean success = false;
@@ -66,7 +66,7 @@ public class IDECompiler {
             }
         }
 
-        if (success) {// TODO
+        if (success) {// En caso de que la compilacion funcione, se generan los archivos HTML y XML
             System.out.println("Compilation was successful.");
             System.out.println("Generating html file...");
             scanner.finishWriting();
