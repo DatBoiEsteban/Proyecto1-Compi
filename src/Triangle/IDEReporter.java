@@ -11,7 +11,7 @@ import Triangle.*;
  * Extends the Triangle.ErrorReporter class. Used to get the source lines
  * where errors are found. 
  *
- * @author Luis Leopoldo Pérez <luiperpe@ns.isi.ulatina.ac.cr>
+ * @author Luis Leopoldo Pï¿½rez <luiperpe@ns.isi.ulatina.ac.cr>
  */
 public class IDEReporter extends ErrorReporter {
      
@@ -45,6 +45,6 @@ public class IDEReporter extends ErrorReporter {
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc=" Attributes ">
-    private int errorPositions[] = new int[10];     // Array of error positions.
+    private final int[] errorPositions = new int[10];     // Array of error positions.
     // </editor-fold>
 }

@@ -9,7 +9,7 @@ import java.awt.event.ActionListener;
 /**
  * Just another small class to call the Triangle interpreter.
  *
- * @author Luis Leopoldo Pérez <luiperpe@ns.isi.ulatina.ac.cr>
+ * @author Luis Leopoldo Pï¿½rez <luiperpe@ns.isi.ulatina.ac.cr>
  */
 public class IDEInterpreter {
     
@@ -38,6 +38,6 @@ public class IDEInterpreter {
     // </editor-fold>
     
     // <editor-fold defaultstate="collapsed" desc=" Attributes ">
-    private ActionListener delegate;    // Gets triggered when the Interpreter stops.
+    private final ActionListener delegate;    // Gets triggered when the Interpreter stops.
     // </editor-fold>
 }

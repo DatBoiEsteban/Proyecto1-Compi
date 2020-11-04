@@ -15,7 +15,7 @@ import java.util.LinkedList;
  * This class is used to redirect the console output to a queue, firing an
  * event every time there is data to read.
  *
- * @author Luis Leopoldo Pérez <luiperpe@ns.isi.ulatina.ac.cr>
+ * @author Luis Leopoldo Pï¿½rez <luiperpe@ns.isi.ulatina.ac.cr>
  */
 public class OutputRedirector extends ByteArrayOutputStream {
       
@@ -32,7 +32,7 @@ public class OutputRedirector extends ByteArrayOutputStream {
      * @param b Array of bytes to be written to the console.
      * @throws java.io.IOException 
      */
-    public void write(byte b[]) throws IOException { 
+    public void write(byte[] b) throws IOException {
         String a = new String(b);
         dataQueue.add(a);
         delegate.actionPerformed(null);
@@ -44,7 +44,7 @@ public class OutputRedirector extends ByteArrayOutputStream {
      * @param offset Starting position in the array.
      * @param length Number of bytes to read.
      */
-    public void write(byte b[], int offset, int length) {
+    public void write(byte[] b, int offset, int length) {
         String a = new String(b, offset, length);
         dataQueue.add(a);
         delegate.actionPerformed(null);
@@ -81,6 +81,6 @@ public class OutputRedirector extends ByteArrayOutputStream {
     
     // <editor-fold defaultstate="collapsed" desc=" Attributes ">
     private ActionListener delegate;                    // Event to be triggered
-    private LinkedList dataQueue = new LinkedList();    // Queue with the data ro read
+    private final LinkedList dataQueue = new LinkedList();    // Queue with the data ro read
     // </editor-fold>
 }

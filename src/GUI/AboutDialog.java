@@ -14,7 +14,7 @@ import java.awt.Color;
 /**
  * About Dialog.
  *
- * @author Luis Leopoldo Pérez <luiperpe@ns.isi.ulatina.ac.cr>
+ * @author Luis Leopoldo Pï¿½rez <luiperpe@ns.isi.ulatina.ac.cr>
  */
 public class AboutDialog extends javax.swing.JDialog {
     
@@ -50,6 +50,6 @@ public class AboutDialog extends javax.swing.JDialog {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
     
-    private javax.swing.JPanel imagePanel; // Panel with the image to be shown.
+    private final javax.swing.JPanel imagePanel; // Panel with the image to be shown.
     // </editor-fold>
 }

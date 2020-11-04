@@ -14,77 +14,9 @@
 
 package Triangle.ContextualAnalyzer;
 
+import Triangle.AbstractSyntaxTrees.*;
 import Triangle.ErrorReporter;
 import Triangle.StdEnvironment;
-import Triangle.AbstractSyntaxTrees.AnyTypeDenoter;
-import Triangle.AbstractSyntaxTrees.ArrayExpression;
-import Triangle.AbstractSyntaxTrees.ArrayTypeDenoter;
-import Triangle.AbstractSyntaxTrees.AssignCommand;
-import Triangle.AbstractSyntaxTrees.BinaryExpression;
-import Triangle.AbstractSyntaxTrees.BinaryOperatorDeclaration;
-import Triangle.AbstractSyntaxTrees.BoolTypeDenoter;
-import Triangle.AbstractSyntaxTrees.CallCommand;
-import Triangle.AbstractSyntaxTrees.CallExpression;
-import Triangle.AbstractSyntaxTrees.CharTypeDenoter;
-import Triangle.AbstractSyntaxTrees.CharacterExpression;
-import Triangle.AbstractSyntaxTrees.CharacterLiteral;
-import Triangle.AbstractSyntaxTrees.ConstActualParameter;
-import Triangle.AbstractSyntaxTrees.ConstDeclaration;
-import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
-import Triangle.AbstractSyntaxTrees.Declaration;
-import Triangle.AbstractSyntaxTrees.DotVname;
-import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
-import Triangle.AbstractSyntaxTrees.EmptyCommand;
-import Triangle.AbstractSyntaxTrees.EmptyExpression;
-import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
-import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
-import Triangle.AbstractSyntaxTrees.FieldTypeDenoter;
-import Triangle.AbstractSyntaxTrees.FormalParameter;
-import Triangle.AbstractSyntaxTrees.FormalParameterSequence;
-import Triangle.AbstractSyntaxTrees.FuncActualParameter;
-import Triangle.AbstractSyntaxTrees.FuncDeclaration;
-import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
-import Triangle.AbstractSyntaxTrees.Identifier;
-import Triangle.AbstractSyntaxTrees.IfCommand;
-import Triangle.AbstractSyntaxTrees.IfExpression;
-import Triangle.AbstractSyntaxTrees.IntTypeDenoter;
-import Triangle.AbstractSyntaxTrees.IntegerExpression;
-import Triangle.AbstractSyntaxTrees.IntegerLiteral;
-import Triangle.AbstractSyntaxTrees.LetCommand;
-import Triangle.AbstractSyntaxTrees.LetExpression;
-import Triangle.AbstractSyntaxTrees.MultipleActualParameterSequence;
-import Triangle.AbstractSyntaxTrees.MultipleArrayAggregate;
-import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
-import Triangle.AbstractSyntaxTrees.MultipleFormalParameterSequence;
-import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
-import Triangle.AbstractSyntaxTrees.Operator;
-import Triangle.AbstractSyntaxTrees.ProcActualParameter;
-import Triangle.AbstractSyntaxTrees.ProcDeclaration;
-import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
-import Triangle.AbstractSyntaxTrees.Program;
-import Triangle.AbstractSyntaxTrees.RecordExpression;
-import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
-import Triangle.AbstractSyntaxTrees.SequentialCommand;
-import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
-import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
-import Triangle.AbstractSyntaxTrees.SimpleVname;
-import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
-import Triangle.AbstractSyntaxTrees.SingleArrayAggregate;
-import Triangle.AbstractSyntaxTrees.SingleFieldTypeDenoter;
-import Triangle.AbstractSyntaxTrees.SingleFormalParameterSequence;
-import Triangle.AbstractSyntaxTrees.SingleRecordAggregate;
-import Triangle.AbstractSyntaxTrees.SubscriptVname;
-import Triangle.AbstractSyntaxTrees.Terminal;
-import Triangle.AbstractSyntaxTrees.TypeDeclaration;
-import Triangle.AbstractSyntaxTrees.TypeDenoter;
-import Triangle.AbstractSyntaxTrees.UnaryExpression;
-import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
-import Triangle.AbstractSyntaxTrees.VarActualParameter;
-import Triangle.AbstractSyntaxTrees.VarDeclaration;
-import Triangle.AbstractSyntaxTrees.VarFormalParameter;
-import Triangle.AbstractSyntaxTrees.Visitor;
-import Triangle.AbstractSyntaxTrees.VnameExpression;
-import Triangle.AbstractSyntaxTrees.WhileCommand;
 import Triangle.SyntacticAnalyzer.SourcePosition;
 
 public final class Checker implements Visitor {
@@ -350,6 +282,16 @@ public final class Checker implements Visitor {
       reporter.reportError ("identifier \"%\" already declared",
                             ast.I.spelling, ast.position);
 
+    return null;
+  }
+
+  @Override
+  public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) { // TODO;
+    return null;
+  }
+
+  @Override
+  public Object vistiLocalDeclaration(LocalDeclaration ast, Object o) { // TODO;
     return null;
   }
 
@@ -744,6 +686,67 @@ public final class Checker implements Visitor {
     return null;
   }
 
+  @Override
+  public Object visitForDeclaration(ForDeclaration ast, Object o) {
+    TypeDenoter iType = (TypeDenoter) ast.I.visit(this, null); /// Nos aseguramos que siempre reciba una expresi�n booleana
+    if (! iType.equals(StdEnvironment.integerType)); //
+    reporter.reportError("Integer identifier expected", "", ast.I.position); //
+    //aqui se declara el id de tipo int.
+    idTable.enter(ast.I.spelling, ast);
+    if (ast.duplicated)
+      reporter.reportError ("identifier \"%\" is already declared before",
+              ast.I.spelling, ast.position);
+    //validar que no haya un for dentro de otro for con el mismo identificador.
+    ast.E.visit(this, null);
+    //visitar la expresion
+    return null;
+  }
+
+  @Override
+  public Object visitUntilCommand(UntilCommand ast, Object o) {
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); /// Nos aseguramos que siempre reciba una expresi�n de tipo Boolean
+    if (! eType.equals(StdEnvironment.booleanType)) //
+      reporter.reportError("Boolean expression expected here", "", ast.E.position); //
+    ast.C.visit(this, null); //
+    return null;///
+  }
+
+  @Override
+  public Object visitDoUntilCommand(DoUntilCommand ast, Object o) {
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); /// Nos aseguramos que siempre reciba una expresi�n booleana
+    if (! eType.equals(StdEnvironment.booleanType)) //
+      reporter.reportError("Boolean expression expected here", "", ast.E.position); //
+    ast.C.visit(this, null); //
+    return null;///
+  }
+
+  @Override
+  public Object visitDoWhileCommand(DoWhileCommand ast, Object o) {
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); /// Nos aseguramos que siempre reciba una expresi�n booleana
+    if (! eType.equals(StdEnvironment.booleanType)) //
+      reporter.reportError("Boolean expression expected here", "", ast.E.position); //
+    ast.C.visit(this, null); //
+    return null;///
+  }
+
+  @Override
+  public Object visitForCommand(ForCommand ast, Object o) {
+    TypeDenoter e1Type = (TypeDenoter) ast.E2.visit(this, null); //
+    TypeDenoter e2Type = (TypeDenoter) ast.FD.E.visit(this, null); // Aqu� accedemos propiamente a la expresi�n que existe dentro de la declaraci�n For
+
+    if (! e1Type.equals(StdEnvironment.integerType)) //
+      reporter.reportError("Integer expression expected here", "", ast.E2.position); //
+    if (! e2Type.equals(StdEnvironment.integerType)) //
+      reporter.reportError("Integer expression expected here", "", ast.FD.E.position); // validamos que las expresiones sean enteras
+
+    idTable.openScope();
+    ast.FD.I.visit(this, null); //visita especificamente I por que sino el comando y la declaracion for existirian en el mismo ambiente
+    //ast.FD.visit(this , null);
+    ast.C1.visit(this, null); //
+    idTable.closeScope();
+    return null;
+  }
+
   // Checks whether the source program, represented by its AST, satisfies the
   // language's scope rules and type rules.
   // Also decorates the AST as follows:
@@ -765,9 +768,9 @@ public final class Checker implements Visitor {
     establishStdEnvironment();
   }
 
-  private IdentificationTable idTable;
-  private static SourcePosition dummyPos = new SourcePosition();
-  private ErrorReporter reporter;
+  private final IdentificationTable idTable;
+  private static final SourcePosition dummyPos = new SourcePosition();
+  private final ErrorReporter reporter;
 
   // Reports that the identifier or operator used at a leaf of the AST
   // has not been declared.

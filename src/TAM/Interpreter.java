@@ -100,9 +100,9 @@ public class Interpreter {
       addr, staticLink, dynamicLink,
       localRegNum;
 
-    System.out.println ("");
+    System.out.println ();
     System.out.println ("State of data store and registers:");
-    System.out.println ("");
+    System.out.println ();
     if (HT == HB)
       System.out.println("            |--------|          (heap is empty)");
     else {
@@ -168,19 +168,19 @@ public class Interpreter {
           System.out.print("|RA=" + data[addr] + "|");
         else
           System.out.print("|" + data[addr] + "|");
-        System.out.println ("");
+        System.out.println ();
         if (addr == dynamicLink) {
           System.out.println("            |--------|");
           dynamicLink = data[addr + 1];
         }
       }
     }
-    System.out.println ("");
+    System.out.println ();
   }
 
   static void showStatus () {
     // Writes an indication of whether and why the program has terminated.
-    System.out.println ("");
+    System.out.println ();
     switch (status) {
       case running:
         System.out.println("Program is running.");
@@ -387,7 +387,7 @@ public class Interpreter {
         } catch (java.io.IOException s) {
           status = failedIOError;
         }
-        data[addr] = (int) currentChar;
+        data[addr] = currentChar;
         break;
       case Machine.putDisplacement:
         ST = ST - 1;
@@ -402,7 +402,7 @@ public class Interpreter {
         }
         break;
       case Machine.puteolDisplacement:
-        System.out.println ("");
+        System.out.println ();
         break;
       case Machine.getintDisplacement:
         ST = ST - 1;

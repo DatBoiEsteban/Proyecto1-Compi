@@ -20,7 +20,7 @@ import java.awt.Graphics;
 import javax.swing.JPanel;
 
 class DrawerPanel extends JPanel {
-  private Drawer drawer;
+  private final Drawer drawer;
 
   public DrawerPanel (Drawer drawer) {
     setPreferredSize(new Dimension(4096, 4096));
