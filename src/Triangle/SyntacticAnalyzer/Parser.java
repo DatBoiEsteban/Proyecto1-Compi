@@ -200,19 +200,7 @@ public class Parser {
         return commandAST;
     }
 
-    ForDeclaration parseForDeclaration() throws SyntaxError {//  TODO
-        ForDeclaration declarationAST = null; // in case there's a syntactic error
-        SourcePosition declarationPos = new SourcePosition();
-        start(declarationPos);
-        Identifier iAST = parseIdentifier();
-        accept(Token.BECOMES);
-        Expression eAST = parseExpression();
-        declarationAST = new ForDeclaration(iAST, eAST, declarationPos);
-        finish(declarationPos);
-        return declarationAST;
-    }
-
-    Command parseRestOfIf() throws SyntaxError {// TODO
+    Command parseRestOfIf() throws SyntaxError {
         Command commandAST = null;
         SourcePosition commandPos = new SourcePosition();
 
@@ -240,14 +228,13 @@ public class Parser {
             break;
 
             default:
-                syntacticError("\"%\" cannot start a command",
-                        currentToken.spelling);
+                syntacticError("\"%\" cannot start a command", currentToken.spelling); //TODO
                 break;
         }
         return commandAST;
     }
 
-    Command parseSingleCommand() throws SyntaxError {// TODO
+    Command parseSingleCommand() throws SyntaxError { // Se cambiaron varias declaraciones en los cases.
         Command commandAST = null; // in case there's a syntactic error
 
         SourcePosition commandPos = new SourcePosition();
@@ -255,7 +242,7 @@ public class Parser {
 
         switch (currentToken.kind) {
 
-            case Token.IDENTIFIER: {// TODO
+            case Token.IDENTIFIER: {
                 Identifier iAST = parseIdentifier();
                 if (currentToken.kind == Token.LPAREN) {
                     acceptIt();
@@ -280,81 +267,76 @@ public class Parser {
       commandAST = parseCommand();
       accept(Token.END);
       break;
-*/
-            case Token.LOOP: // TODO
+    */
+            case Token.LOOP:
             {
-                acceptIt(); //
+                acceptIt();
                 switch (currentToken.kind) {
-                    case Token.WHILE: //"loop" "while" Expression "do" Command "repeat" TODO
-                    { //
-                        acceptIt(); //
-                        Expression eAST = parseExpression(); //
-                        accept(Token.DO); //
-                        Command cAST = parseCommand();//
-                        accept(Token.END);//
-                        finish(commandPos);//
-                        commandAST = new WhileCommand(eAST, cAST, commandPos);             //
-                    }//
-                    break;//
-                    case Token.UNTIL://|"loop" "until" Expression "do" Command "repeat" TODO
-                    {//
-                        acceptIt();//
-                        Expression eAST = parseExpression();//
-                        accept(Token.DO);//
-                        Command cAST = parseCommand();//
-                        accept(Token.END); //
-                        finish(commandPos); //
-                        commandAST = new UntilCommand(eAST, cAST, commandPos); //
-                    }//
-                    break;//
-                    case Token.FOR: //|"loop" "for" Identifier "~"Expression "to" Expression "do" Command "repeat" TODO
-                    {// la expresin 1 se evalua una sola vez antes de comenzar a itera, el valor de la exprecin 1 es el inicial
-                        // del indentiricador, Si el valor inicial supera al de la segunda expresin, no se ejecuta ninguna vez el comando
-                        // solo se evaluan nicamente las expresiones una vez y el identificador tiene que estar dentro del rango osea <=
-                        // adems, el identificador requiere espacio en memoria.
-                        acceptIt();//
+                    case Token.WHILE: // "loop" "while" Expression "do" Command "repeat"
+                    {
+                        acceptIt();
+                        Expression eAST = parseExpression();
+                        accept(Token.DO);
+                        Command cAST = parseCommand();
+                        accept(Token.END);
+                        finish(commandPos);
+                        commandAST = new WhileCommand(eAST, cAST, commandPos);
+                    }
+                    break;
+                    case Token.UNTIL: // "loop" "until" Expression "do" Command "repeat"
+                    {
+                        acceptIt();
+                        Expression eAST = parseExpression();
+                        accept(Token.DO);
+                        Command cAST = parseCommand();
+                        accept(Token.END);
+                        finish(commandPos);
+                        commandAST = new UntilCommand(eAST, cAST, commandPos);
+                    }
+                    break;
+                    case Token.FOR: // "loop" "for" Identifier "~" Expression "to" Expression "do" Command "repeat"
+                    {
+                        acceptIt();
                         ForDeclaration fAST = parseForDeclaration();
                         accept(Token.TO);
                         Expression eAST2 = parseExpression();
                         accept(Token.DO);
-                        Command cAST = parseCommand();//
+                        Command cAST = parseCommand();
                         accept(Token.END);
-                        finish(commandPos); //
+                        finish(commandPos);
                         commandAST = new ForCommand(fAST, eAST2, cAST, commandPos);
                     }
-                    break;    //
+                    break;
 
-                    case Token.DO: { // TODO
+                    case Token.DO: {
                         acceptIt();
-                        Command cAST = parseCommand(); //
-                        if ((currentToken.kind != Token.WHILE) && (currentToken.kind != Token.UNTIL)) {//
-                            syntacticError("Found \"%\" 'Until'cor 'while' statement was expect.", currentToken.spelling);
-                            break;//
+                        Command cAST = parseCommand();
+                        if ((currentToken.kind != Token.WHILE) && (currentToken.kind != Token.UNTIL)) {
+                            syntacticError("Found \"%\" 'Until' or 'while' statement was expected.", currentToken.spelling);
+                            break;
                         }
-                        acceptIt();//acepto el while o until//
-                        boolean isUntil = Token.UNTIL == currentToken.kind;//
+                        acceptIt(); // acepta while o until
+                        boolean isUntil = Token.UNTIL == currentToken.kind;
                         //System.out.println(isUntil);
-                        Expression eAST = parseExpression();//
-                        accept(Token.END);//
-                        finish(commandPos); //
-                        if (isUntil == true) {//
-                            commandAST = new DoUntilCommand(eAST, cAST, commandPos); //|"loop" "do" Command "until" Expression "repeat"
+                        Expression eAST = parseExpression();
+                        accept(Token.END);
+                        finish(commandPos);
+                        if (isUntil == true) {
+                            commandAST = new DoUntilCommand(eAST, cAST, commandPos); // "loop" "do" Command "until" Expression "repeat"
                         } else {
-                            commandAST = new DoWhileCommand(eAST, cAST, commandPos); //|"loop" "do" Command "while" Expression "repeat"
-                        }                //
+                            commandAST = new DoWhileCommand(eAST, cAST, commandPos); // "loop" "do" Command "while" Expression "repeat"
+                        }
                     }
-                    break;//
+                    break;
 
                     default:
-                        syntacticError("\"%\" cannot be next to loop. One of the next is needed: do, for, until,while. ", currentToken.spelling);
+                        syntacticError("\"%\" cannot be next to loop. One of the next is needed: do, for, until, while. ", currentToken.spelling);
                         break;
                 }
-                //
             }
             break;
 
-
-            case Token.LET: { // TODO
+            case Token.LET: {
                 acceptIt();
                 Declaration dAST = parseDeclaration();
                 accept(Token.IN);
@@ -365,7 +347,7 @@ public class Parser {
             }
             break;
 
-            case Token.IF: { //  TODO
+            case Token.IF: {
                 acceptIt();
                 Expression eAST = parseExpression();
                 accept(Token.THEN);
@@ -389,7 +371,7 @@ public class Parser {
       }
       break;
 */
-            case Token.SKIP: // creación de Skip  TODO
+            case Token.SKIP: // creación de Skip
             {
                 acceptIt();
                 finish(commandPos);
@@ -640,7 +622,7 @@ public class Parser {
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-    Declaration parseDeclaration() throws SyntaxError {// TODO
+    Declaration parseDeclaration() throws SyntaxError {
         Declaration declarationAST = null; // in case there's a syntactic error
 
         SourcePosition declarationPos = new SourcePosition();
@@ -650,13 +632,12 @@ public class Parser {
             acceptIt();
             Declaration d2AST = parseCompoundDeclaration();
             finish(declarationPos);
-            declarationAST = new SequentialDeclaration(declarationAST, d2AST,
-                    declarationPos);
+            declarationAST = new SequentialDeclaration(declarationAST, d2AST, declarationPos);
         }
         return declarationAST;
     }
 
-    Declaration parseSingleDeclaration() throws SyntaxError {// TODO
+    Declaration parseSingleDeclaration() throws SyntaxError {
         Declaration declarationAST = null; // in case there's a syntactic error
 
         SourcePosition declarationPos = new SourcePosition();
@@ -678,7 +659,7 @@ public class Parser {
                     TypeDenoter tAST = parseTypeDenoter();
                     finish(declarationPos);
                     declarationAST = new VarDeclaration(iAST, tAST, declarationPos);
-                } else if (currentToken.kind == Token.BECOMES) { // Se agrega el cambio para utilizar una variable que no haya sido previamente declarada TODO
+                } else if (currentToken.kind == Token.BECOMES) { // Se agrega el cambio para utilizar una variable que no haya sido previamente declarada
                     acceptIt();
                     Expression eAST = parseExpression();
                     finish(declarationPos);
@@ -686,7 +667,7 @@ public class Parser {
                 }
 
             }
-            case Token.PROC -> { // TODO
+            case Token.PROC -> {
                 acceptIt();
                 Identifier iAST = parseIdentifier();
                 accept(Token.LPAREN);
@@ -698,7 +679,7 @@ public class Parser {
                 finish(declarationPos);
                 declarationAST = new ProcDeclaration(iAST, fpsAST, cAST, declarationPos);
             }
-            case Token.FUNC -> { // TODO
+            case Token.FUNC -> {
                 acceptIt();
                 Identifier iAST = parseIdentifier();
                 accept(Token.LPAREN);
@@ -763,7 +744,7 @@ public class Parser {
         return declarationAST;
     }
 
-    Declaration parseProcFuncsDeclaration() throws SyntaxError { // Se genera el parseo de multiples Procs o Funcs separados por un PIPE (|) TODO
+    Declaration parseProcFuncsDeclaration() throws SyntaxError { // Se genera el parseo de multiples Procs o Funcs separados por un PIPE (|)
         Declaration declarationAST = null;
         SourcePosition declarationPos = new SourcePosition();
         start(declarationPos);
@@ -774,7 +755,7 @@ public class Parser {
         return declarationAST;
     }
 
-    Declaration parseRestOfProcFuncsDeclaration() throws SyntaxError { // Se genera el parseo de ( "|" ProcFunc )+ TODO
+    Declaration parseRestOfProcFuncsDeclaration() throws SyntaxError { // Se genera el parseo de ( "|" ProcFunc )+
         Declaration declarationAST = null;
         SourcePosition declarationPos = new SourcePosition();
         start(declarationPos);
@@ -785,7 +766,7 @@ public class Parser {
         return declarationAST;
     }
 
-    Declaration parseCompoundDeclaration() throws SyntaxError { // Se genera el parseo de el nuevo Compound Declaration TODO
+    Declaration parseCompoundDeclaration() throws SyntaxError { // Se genera el parseo de el nuevo Compound Declaration
         Declaration declarationAST = null;
 
         SourcePosition declarationPos = new SourcePosition();
@@ -809,6 +790,18 @@ public class Parser {
             }
             default -> syntacticError("\"%\" cannot start a declaration", currentToken.spelling);
         }
+        return declarationAST;
+    }
+
+    ForDeclaration parseForDeclaration() throws SyntaxError {//
+        ForDeclaration declarationAST = null; // in case there's a syntactic error
+        SourcePosition declarationPos = new SourcePosition();
+        start(declarationPos);
+        Identifier iAST = parseIdentifier();
+        accept(Token.BECOMES);
+        Expression eAST = parseExpression();
+        declarationAST = new ForDeclaration(iAST, eAST, declarationPos);
+        finish(declarationPos);
         return declarationAST;
     }
 

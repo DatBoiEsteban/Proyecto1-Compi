@@ -58,7 +58,7 @@ final class Token extends Object {
 
   // Token classes...
 
-  public static final int // TODO
+  public static final int // Se agregan palabra y símbolos léxicos.
 
     // literals, identifiers, operators...
     INTLITERAL	= 0,
@@ -68,45 +68,45 @@ final class Token extends Object {
 
     // reserved words - must be in alphabetical order...
     ARRAY		= 4,
-    //BEGIN		= 5,
-    CASE        = 5,
+    //BEGIN		= 5,  // Se elimina la palabra en Triángulo extendido.
+    CASE        = 5,  // Se  agrega la palabra reservada.
     CONST		= 6,
-    CONTINUE    = 7,
+    CONTINUE    = 7,  // Se  agrega la palabra reservada.
     DO			= 8,
     ELSE		= 9,
-    ELSEIF      = 10,
+    ELSEIF      = 10, // Se  agrega la palabra reservada.
     END			= 11,
-    FOR         = 12,
-    FROM        = 13,
+    FOR         = 12, // Se  agrega la palabra reservada.
+    FROM        = 13, // Se  agrega la palabra reservada.
     FUNC		= 14,
     IF			= 15,
     IN			= 16,
-    LEAVE       = 17,
+    LEAVE       = 17, // Se  agrega la palabra reservada.
     LET			= 18,
-    LOCAL       = 19,
-    LOOP        = 20,
+    LOCAL       = 19, // Se  agrega la palabra reservada.
+    LOOP        = 20, // Se  agrega la palabra reservada.
     OF			= 21,
     PROC		= 22,
     RECORD		= 23,
-    RECURSIVE   = 24,
-    SELECT      = 25,
-    SKIP        = 26,
+    RECURSIVE   = 24, // Se  agrega la palabra reservada.
+    SELECT      = 25, // Se  agrega la palabra reservada.
+    SKIP        = 26, // Se  agrega la palabra reservada.
     THEN		= 27,
-    TO          = 28,
+    TO          = 28, // Se  agrega la palabra reservada.
     TYPE		= 29,
-    UNTIL       = 30,
+    UNTIL       = 30, // Se  agrega la palabra reservada.
     VAR			= 31,
     WHILE		= 32,
 
     // punctuation...
     DOT			= 33,
-    DOUBLEDOT   = 34, //".."
+    DOUBLEDOT   = 34, //".." Se  agrega la el símbolo léxico.
     COLON		= 35,
     SEMICOLON	= 36,
     COMMA		= 37,
     BECOMES		= 38,
     IS			= 39,
-    PIPE        = 40, // "|"
+    PIPE        = 40, // "|" Se  agrega la el símbolo léxico.
 
     // brackets...
     LPAREN		= 41,
@@ -120,7 +120,7 @@ final class Token extends Object {
     EOT			= 47,
     ERROR		= 48;
 
-  private static final String[] tokenTable = new String[] { // TODO
+  private static final String[] tokenTable = new String[] { // Se elimina begin y alfabéticamente se incorporan las nuevas palabras reservadas.
     "<int>",
     "<char>",
     "<identifier>",
@@ -173,11 +173,11 @@ final class Token extends Object {
     "<error>"
   };
 
-  private final static int	firstReservedWord = Token.ARRAY, // TODO
+  private final static int	firstReservedWord = Token.ARRAY,
   				lastReservedWord  = Token.WHILE;
 
   public static int getLastReservedWord() {
     return lastReservedWord;
-  }// TODO
+  }
 
 }

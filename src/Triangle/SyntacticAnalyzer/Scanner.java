@@ -23,8 +23,8 @@ public final class Scanner {
     private char currentChar;
     private StringBuffer currentSpelling;
     private boolean currentlyScanningToken;
-    private WriterHTML writer;// TODO
-    private boolean writing;// TODO
+    private WriterHTML writer;
+    private boolean writing;
 
     private boolean isLetter(char c) {
         return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z');
@@ -49,7 +49,7 @@ public final class Scanner {
     public Scanner(SourceFile source) {
         sourceFile = source;
         currentChar = sourceFile.getSource();
-        this.writing = false;// TODO
+        this.writing = false;
         debug = false;
     }
 
@@ -57,12 +57,12 @@ public final class Scanner {
         debug = true;
     }
 
-    public void enableWriting(String pFilename) {// TODO
+    public void enableWriting(String pFilename) { // Inicia la escritura de HTML
         this.writing = true;
         writer = new WriterHTML(pFilename);
     }
 
-    public void finishWriting() {// TODO
+    public void finishWriting() { // Finaliza la escritura  y guarda el HTML
         this.writing = false;
         writer.save();
     }
@@ -74,7 +74,7 @@ public final class Scanner {
         if (currentlyScanningToken)
             currentSpelling.append(currentChar);
         else if (this.writing)
-            writer.writeSeparator(currentChar);//agrega el separador de palabra en html
+            writer.writeSeparator(currentChar); // agrega el separador de palabra en HTML
         currentChar = sourceFile.getSource();
     }
 
@@ -86,7 +86,7 @@ public final class Scanner {
                 takeIt();
                 while ((currentChar != SourceFile.EOL) && (currentChar != SourceFile.EOT))
                     takeIt();
-                writer.EndTag("comment");
+                writer.EndTag("comment"); // reconoce los comentarios en HTML
                 if (currentChar == SourceFile.EOL)
                     takeIt();
             }
@@ -201,7 +201,7 @@ public final class Scanner {
                 takeIt();
                 if (currentChar == '.') {
                     takeIt();
-                    return Token.DOUBLEDOT;// TODO
+                    return Token.DOUBLEDOT; // Se agrega if porque reconoce un símbolo a la vez, entonces valida si existe 1 o 2 punto.
                 } else
                     return Token.DOT;
 
@@ -221,7 +221,7 @@ public final class Scanner {
                 takeIt();
                 return Token.COMMA;
 
-            case '~':// TODO
+            case '~':
                 takeIt();
                 return Token.IS;
 
@@ -249,9 +249,9 @@ public final class Scanner {
                 takeIt();
                 return Token.RCURLY;
 
-            case '|':// TODO
+            case '|':
                 takeIt();
-                return Token.PIPE;
+                return Token.PIPE; // Se agrega el reconcimiento del pipe.
 
             case SourceFile.EOT:
                 return Token.EOT;
