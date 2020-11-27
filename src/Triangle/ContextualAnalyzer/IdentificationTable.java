@@ -15,6 +15,7 @@
 package Triangle.ContextualAnalyzer;
 
 import Triangle.AbstractSyntaxTrees.Declaration;
+import Triangle.AbstractSyntaxTrees.LocalDeclaration;
 
 public final class IdentificationTable {
 
@@ -51,6 +52,7 @@ public final class IdentificationTable {
     this.latest = entry;
   }
 
+
   // Makes a new entry in the identification table for the given identifier
   // and attribute. The new entry belongs to the current level.
   // duplicated is set to to true iff there is already an entry for the
@@ -59,11 +61,15 @@ public final class IdentificationTable {
   public void enter (String id, Declaration attr) {
 
     IdEntry entry = this.latest;
+    int offset = 0;
+    if (entry != null && entry.attr instanceof LocalDeclaration){
+      offset = 1;
+    }
     boolean present = false, searching = true;
 
     // Check for duplicate entry ...
     while (searching) {
-      if (entry == null || entry.level < this.level)
+      if (entry == null || entry.level - offset < this.level )
         searching = false;
       else if (entry.id.equals(id)) {
         present = true;
@@ -74,7 +80,7 @@ public final class IdentificationTable {
 
     attr.duplicated = present;
     // Add new entry ...
-    entry = new IdEntry(id, attr, this.level, this.latest);
+    entry = new IdEntry(id, attr, this.level - offset, this.latest);
     this.latest = entry;
   }
 

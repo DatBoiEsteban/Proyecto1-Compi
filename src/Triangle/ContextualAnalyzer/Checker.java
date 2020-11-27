@@ -259,6 +259,7 @@ public final class Checker implements Visitor {
   public Object visitSequentialDeclaration(SequentialDeclaration ast, Object o) {
     ast.D1.visit(this, null);
     ast.D2.visit(this, null);
+
     return null;
   }
 
@@ -287,11 +288,23 @@ public final class Checker implements Visitor {
 
   @Override
   public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) { // TODO;
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+    idTable.enter(ast.I.spelling, ast);
+    if (ast.duplicated)
+      reporter.reportError ("identifier \"%\" already declared",
+              ast.I.spelling, ast.position);
     return null;
   }
 
   @Override
-  public Object vistiLocalDeclaration(LocalDeclaration ast, Object o) { // TODO;
+  public Object visitLocalDeclaration(LocalDeclaration ast, Object o) { // TODO;
+    idTable.openScope();
+
+    ast.d1.visit(this, null);
+    idTable.enter("local", ast);
+    ast.d2.visit(this, null);
+    
+    idTable.closeScope();
     return null;
   }
 
@@ -656,7 +669,11 @@ public final class Checker implements Visitor {
       } else if (binding instanceof VarFormalParameter) {
         ast.type = ((VarFormalParameter) binding).T;
         ast.variable = true;
-      } else
+      } else if (binding instanceof InitializedVarDeclaration) {
+        ast.type = ((InitializedVarDeclaration)binding).E.type;
+        ast.variable = true;
+      }
+      else
         reporter.reportError ("\"%\" is not a const or var identifier",
                               ast.I.spelling, ast.I.position);
     return ast.type;

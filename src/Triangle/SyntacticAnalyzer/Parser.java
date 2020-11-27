@@ -655,6 +655,7 @@ public class Parser {
                 } else if (currentToken.kind == Token.BECOMES) { // Se agrega el cambio para utilizar una variable que no haya sido previamente declarada
                     acceptIt();
                     Expression eAST = parseExpression();
+
                     finish(declarationPos);
                     declarationAST = new InitializedVarDeclaration(iAST, eAST, declarationPos);
                 }

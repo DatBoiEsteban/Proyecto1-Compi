@@ -296,7 +296,7 @@ public final class Encoder implements Visitor {
   }
 
   @Override
-  public Object vistiLocalDeclaration(LocalDeclaration ast, Object o) { // TODO;
+  public Object visitLocalDeclaration(LocalDeclaration ast, Object o) { // TODO;
     return null;
   }
 

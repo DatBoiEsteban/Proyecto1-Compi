@@ -11,7 +11,7 @@ public class LocalDeclaration extends Declaration {
 
     @Override
     public Object visit(Visitor v, Object o) {
-        return v.vistiLocalDeclaration(this, o);
+        return v.visitLocalDeclaration(this, o);
     }
 
     public Declaration d1;

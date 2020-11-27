@@ -49,7 +49,7 @@ public interface Visitor {
   Object visitUnaryOperatorDeclaration(UnaryOperatorDeclaration ast, Object o);
   Object visitVarDeclaration(VarDeclaration ast, Object o);
   Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o); // TODO;
-  Object vistiLocalDeclaration(LocalDeclaration ast, Object o); // TODO;
+  Object visitLocalDeclaration(LocalDeclaration ast, Object o); // TODO;
 
   // Array Aggregates
   Object visitMultipleArrayAggregate(MultipleArrayAggregate ast, Object o);

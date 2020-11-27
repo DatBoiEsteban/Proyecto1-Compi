@@ -142,7 +142,7 @@ public class TreeVisitor implements Visitor {
     }
 
     @Override
-    public Object vistiLocalDeclaration(LocalDeclaration ast, Object o) { // TODO;
+    public Object visitLocalDeclaration(LocalDeclaration ast, Object o) { // TODO;
         return (createBinary("Local Declaration", ast.d1, ast.d2));
     }
     // </editor-fold>

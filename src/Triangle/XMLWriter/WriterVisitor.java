@@ -233,7 +233,7 @@ public class WriterVisitor implements Visitor {// TODO
     }
 
     @Override
-    public Object vistiLocalDeclaration(LocalDeclaration ast, Object o) {
+    public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
         writeLineXML("<LocalDeclaration>");
         ast.d1.visit(this, null);
         ast.d2.visit(this, null);
