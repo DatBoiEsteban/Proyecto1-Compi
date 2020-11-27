@@ -303,7 +303,7 @@ public final class Checker implements Visitor {
     ast.d1.visit(this, null);
     idTable.enter("local", ast);
     ast.d2.visit(this, null);
-    
+
     idTable.closeScope();
     return null;
   }

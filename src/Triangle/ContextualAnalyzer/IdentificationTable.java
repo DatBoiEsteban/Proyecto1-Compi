@@ -15,6 +15,7 @@
 package Triangle.ContextualAnalyzer;
 
 import Triangle.AbstractSyntaxTrees.Declaration;
+import Triangle.AbstractSyntaxTrees.Identifier;
 import Triangle.AbstractSyntaxTrees.LocalDeclaration;
 
 public final class IdentificationTable {
@@ -52,6 +53,22 @@ public final class IdentificationTable {
     this.latest = entry;
   }
 
+  private boolean isLocal() {
+    IdEntry entry = this.latest;
+    boolean found = false;
+    while (entry.level != this.level) {
+      if (entry.previous != null) {
+        entry = entry.previous;
+      } else {
+        break;
+      }
+    }
+    if (entry.id.equals("local")) {
+      found = true;
+    }
+    return found;
+  }
+
 
   // Makes a new entry in the identification table for the given identifier
   // and attribute. The new entry belongs to the current level.
@@ -62,8 +79,10 @@ public final class IdentificationTable {
 
     IdEntry entry = this.latest;
     int offset = 0;
-    if (entry != null && entry.attr instanceof LocalDeclaration){
-      offset = 1;
+    if (entry != null && (entry.level < this.level || entry.id.equals("local"))) {
+      if (this.isLocal()) {
+        offset = 1;
+      }
     }
     boolean present = false, searching = true;
 
