@@ -288,7 +288,7 @@ public final class Checker implements Visitor {
 
   @Override
   public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) { // TODO;
-    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+    ast.E.type = (TypeDenoter) ast.E.visit(this, null);
     idTable.enter(ast.I.spelling, ast);
     if (ast.duplicated)
       reporter.reportError ("identifier \"%\" already declared",

@@ -14,9 +14,7 @@
 
 package Triangle.ContextualAnalyzer;
 
-import Triangle.AbstractSyntaxTrees.Declaration;
-import Triangle.AbstractSyntaxTrees.Identifier;
-import Triangle.AbstractSyntaxTrees.LocalDeclaration;
+import Triangle.AbstractSyntaxTrees.*;
 
 public final class IdentificationTable {
 
@@ -116,10 +114,11 @@ public final class IdentificationTable {
     boolean present = false, searching = true;
 
     entry = this.latest;
+    int level = this.level;
     while (searching) {
       if (entry == null)
         searching = false;
-      else if (entry.id.equals(id)) {
+      else if (entry.id.equals(id) && (isSTD(entry) || level >= entry.level)) {
         present = true;
         searching = false;
         attr = entry.attr;
@@ -130,4 +129,20 @@ public final class IdentificationTable {
     return attr;
   }
 
+  private boolean isSTD(IdEntry entry) {
+    if (entry.attr instanceof UnaryOperatorDeclaration) {
+      return true;
+    } else if(entry.attr instanceof BinaryOperatorDeclaration) {
+      return true;
+    } else if(entry.attr instanceof ProcDeclaration) {
+      return true;
+    } else if(entry.attr instanceof FuncDeclaration) {
+      return true;
+    } else if(entry.attr instanceof ConstDeclaration) {
+      return true;
+    } else if(entry.attr instanceof TypeDeclaration) {
+      return true;
+    }
+    return  false;
+  }
 }
