@@ -130,19 +130,11 @@ public final class IdentificationTable {
   }
 
   private boolean isSTD(IdEntry entry) {
-    if (entry.attr instanceof UnaryOperatorDeclaration) {
-      return true;
-    } else if(entry.attr instanceof BinaryOperatorDeclaration) {
-      return true;
-    } else if(entry.attr instanceof ProcDeclaration) {
-      return true;
-    } else if(entry.attr instanceof FuncDeclaration) {
-      return true;
-    } else if(entry.attr instanceof ConstDeclaration) {
-      return true;
-    } else if(entry.attr instanceof TypeDeclaration) {
-      return true;
-    }
-    return  false;
+    return entry.attr instanceof UnaryOperatorDeclaration
+            || entry.attr instanceof BinaryOperatorDeclaration
+            || entry.attr instanceof ProcDeclaration
+            || entry.attr instanceof FuncDeclaration
+            || entry.attr instanceof ConstDeclaration
+            || entry.attr instanceof TypeDeclaration;
   }
 }
