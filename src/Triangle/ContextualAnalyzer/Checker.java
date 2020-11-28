@@ -19,6 +19,8 @@ import Triangle.ErrorReporter;
 import Triangle.StdEnvironment;
 import Triangle.SyntacticAnalyzer.SourcePosition;
 
+import java.lang.reflect.Type;
+
 public final class Checker implements Visitor {
 
   // Commands
@@ -59,8 +61,14 @@ public final class Checker implements Visitor {
     TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
     if (! eType.equals(StdEnvironment.booleanType))
       reporter.reportError("Boolean expression expected here", "", ast.E.position);
+
+    idTable.openScope();
     ast.C1.visit(this, null);
+    idTable.closeScope();
+
+    idTable.openScope();
     ast.C2.visit(this, null);
+    idTable.closeScope();
     return null;
   }
 
@@ -75,14 +83,6 @@ public final class Checker implements Visitor {
   public Object visitSequentialCommand(SequentialCommand ast, Object o) {
     ast.C1.visit(this, null);
     ast.C2.visit(this, null);
-    return null;
-  }
-
-  public Object visitWhileCommand(WhileCommand ast, Object o) {
-    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
-    if (! eType.equals(StdEnvironment.booleanType))
-      reporter.reportError("Boolean expression expected here", "", ast.E.position);
-    ast.C.visit(this, null);
     return null;
   }
 
@@ -230,7 +230,8 @@ public final class Checker implements Visitor {
 
   public Object visitFuncDeclaration(FuncDeclaration ast, Object o) {
     ast.T = (TypeDenoter) ast.T.visit(this, null);
-    idTable.enter (ast.I.spelling, ast); // permits recursion
+    idTable.enter(ast.I.spelling, ast);
+
     if (ast.duplicated)
       reporter.reportError ("identifier \"%\" already declared",
                             ast.I.spelling, ast.position);
@@ -245,6 +246,7 @@ public final class Checker implements Visitor {
   }
 
   public Object visitProcDeclaration(ProcDeclaration ast, Object o) {
+
     idTable.enter (ast.I.spelling, ast); // permits recursion
     if (ast.duplicated)
       reporter.reportError ("identifier \"%\" already declared",
@@ -257,9 +259,24 @@ public final class Checker implements Visitor {
   }
 
   public Object visitSequentialDeclaration(SequentialDeclaration ast, Object o) {
+//    if (ast.D1 instanceof FuncDeclaration) {
+//      idTable.enter(((FuncDeclaration)ast.D1).I.spelling, ast.D1);
+//    } else if (ast.D1 instanceof ProcDeclaration) {
+//      idTable.enter(((ProcDeclaration)ast.D1).I.spelling, ast.D1);
+//    }
+//
+//    if (ast.D2 instanceof SequentialDeclaration) {
+//      ast.D2.visit(this,null);
+//    } else if (ast.D2 instanceof FuncDeclaration) {
+//      idTable.enter(((FuncDeclaration)ast.D2).I.spelling, ast.D2);
+//    } else {
+//      idTable.enter(((ProcDeclaration)ast.D2).I.spelling, ast.D2);
+//    }
+
+
+
     ast.D1.visit(this, null);
     ast.D2.visit(this, null);
-
     return null;
   }
 
@@ -705,61 +722,75 @@ public final class Checker implements Visitor {
 
   @Override
   public Object visitForDeclaration(ForDeclaration ast, Object o) {
-    TypeDenoter iType = (TypeDenoter) ast.I.visit(this, null); /// Nos aseguramos que siempre reciba una expresi�n booleana
-    if (! iType.equals(StdEnvironment.integerType)); //
-    reporter.reportError("Integer identifier expected", "", ast.I.position); //
+    TypeDenoter iType = (TypeDenoter) ast.I.visit(this, null);
+    if (! iType.equals(StdEnvironment.integerType))
+      reporter.reportError("Integer identifier expected", "", ast.I.position);
     //aqui se declara el id de tipo int.
     idTable.enter(ast.I.spelling, ast);
     if (ast.duplicated)
       reporter.reportError ("identifier \"%\" is already declared before",
               ast.I.spelling, ast.position);
     //validar que no haya un for dentro de otro for con el mismo identificador.
-    ast.E.visit(this, null);
+    iType =(TypeDenoter) ast.E.visit(this, null);
+    if (! iType.equals(StdEnvironment.integerType))
+      reporter.reportError("Integer identifier expected", "", ast.E.position);
     //visitar la expresion
     return null;
   }
 
   @Override
   public Object visitUntilCommand(UntilCommand ast, Object o) {
-    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); /// Nos aseguramos que siempre reciba una expresi�n de tipo Boolean
-    if (! eType.equals(StdEnvironment.booleanType)) //
-      reporter.reportError("Boolean expression expected here", "", ast.E.position); //
-    ast.C.visit(this, null); //
-    return null;///
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+    if (! eType.equals(StdEnvironment.booleanType))
+      reporter.reportError("Boolean expression expected here", "", ast.E.position);
+    idTable.openScope();
+    ast.C.visit(this, null);
+    idTable.closeScope();
+    return null;
   }
 
   @Override
   public Object visitDoUntilCommand(DoUntilCommand ast, Object o) {
-    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); /// Nos aseguramos que siempre reciba una expresi�n booleana
-    if (! eType.equals(StdEnvironment.booleanType)) //
-      reporter.reportError("Boolean expression expected here", "", ast.E.position); //
-    ast.C.visit(this, null); //
-    return null;///
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+    if (! eType.equals(StdEnvironment.booleanType))
+      reporter.reportError("Boolean expression expected here", "", ast.E.position);
+    idTable.openScope();
+    ast.C.visit(this, null);
+    idTable.closeScope();
+    return null;
+  }
+
+  @Override
+  public Object visitWhileCommand(WhileCommand ast, Object o) {
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+    if (! eType.equals(StdEnvironment.booleanType))
+      reporter.reportError("Boolean expression expected here", "", ast.E.position);
+    idTable.openScope();
+    ast.C.visit(this, null);
+    idTable.closeScope();
+    return null;
   }
 
   @Override
   public Object visitDoWhileCommand(DoWhileCommand ast, Object o) {
-    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null); /// Nos aseguramos que siempre reciba una expresi�n booleana
-    if (! eType.equals(StdEnvironment.booleanType)) //
-      reporter.reportError("Boolean expression expected here", "", ast.E.position); //
-    ast.C.visit(this, null); //
-    return null;///
+    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+    if (! eType.equals(StdEnvironment.booleanType))
+      reporter.reportError("Boolean expression expected here", "", ast.E.position);
+    idTable.openScope();
+    ast.C.visit(this, null);
+    idTable.openScope();
+    return null;
   }
 
   @Override
   public Object visitForCommand(ForCommand ast, Object o) {
-    TypeDenoter e1Type = (TypeDenoter) ast.E2.visit(this, null); //
-    TypeDenoter e2Type = (TypeDenoter) ast.FD.E.visit(this, null); // Aqu� accedemos propiamente a la expresi�n que existe dentro de la declaraci�n For
-
-    if (! e1Type.equals(StdEnvironment.integerType)) //
-      reporter.reportError("Integer expression expected here", "", ast.E2.position); //
-    if (! e2Type.equals(StdEnvironment.integerType)) //
-      reporter.reportError("Integer expression expected here", "", ast.FD.E.position); // validamos que las expresiones sean enteras
-
+    ast.FD.visit(this, null);
+    TypeDenoter e1Type = (TypeDenoter) ast.E2.visit(this, null);
+    if (! e1Type.equals(StdEnvironment.integerType))
+      reporter.reportError("Integer expression expected here", "", ast.E2.position);
     idTable.openScope();
-    ast.FD.I.visit(this, null); //visita especificamente I por que sino el comando y la declaracion for existirian en el mismo ambiente
-    //ast.FD.visit(this , null);
-    ast.C1.visit(this, null); //
+    ast.FD.I.visit(this, null);
+    ast.C1.visit(this, null);
     idTable.closeScope();
     return null;
   }

@@ -265,8 +265,8 @@ public class Parser {
             {
                 acceptIt();
                 switch (currentToken.kind) {
-                    case Token.WHILE: // "loop" "while" Expression "do" Command "repeat"
-                    {
+// "loop" "while" Expression "do" Command "repeat"
+                    case Token.WHILE -> {
                         acceptIt();
                         Expression eAST = parseExpression();
                         accept(Token.DO);
@@ -275,9 +275,8 @@ public class Parser {
                         finish(commandPos);
                         commandAST = new WhileCommand(eAST, cAST, commandPos);
                     }
-                    break;
-                    case Token.UNTIL: // "loop" "until" Expression "do" Command "repeat"
-                    {
+// "loop" "until" Expression "do" Command "repeat"
+                    case Token.UNTIL -> {
                         acceptIt();
                         Expression eAST = parseExpression();
                         accept(Token.DO);
@@ -286,9 +285,8 @@ public class Parser {
                         finish(commandPos);
                         commandAST = new UntilCommand(eAST, cAST, commandPos);
                     }
-                    break;
-                    case Token.FOR: // "loop" "for" Identifier "~" Expression "to" Expression "do" Command "repeat"
-                    {
+// "loop" "for" Identifier "~" Expression "to" Expression "do" Command "repeat"
+                    case Token.FOR -> {
                         acceptIt();
                         ForDeclaration fAST = parseForDeclaration();
                         accept(Token.TO);
@@ -299,9 +297,7 @@ public class Parser {
                         finish(commandPos);
                         commandAST = new ForCommand(fAST, eAST2, cAST, commandPos);
                     }
-                    break;
-
-                    case Token.DO: {
+                    case Token.DO -> {
                         acceptIt();
                         Command cAST = parseCommand();
                         if ((currentToken.kind != Token.WHILE) && (currentToken.kind != Token.UNTIL)) {
@@ -320,11 +316,7 @@ public class Parser {
                             commandAST = new DoWhileCommand(eAST, cAST, commandPos); // "loop" "do" Command "while" Expression "repeat"
                         }
                     }
-                    break;
-
-                    default:
-                        syntacticError("\"%\" cannot be next to loop. One of the next is needed: do, for, until, while. ", currentToken.spelling);
-                        break;
+                    default -> syntacticError("\"%\" cannot be next to loop. One of the next is needed: do, for, until, while. ", currentToken.spelling);
                 }
             }
             break;
