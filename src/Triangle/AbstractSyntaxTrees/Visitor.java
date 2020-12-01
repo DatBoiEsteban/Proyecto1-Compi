@@ -50,6 +50,7 @@ public interface Visitor {
   Object visitVarDeclaration(VarDeclaration ast, Object o);
   Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o); // TODO;
   Object visitLocalDeclaration(LocalDeclaration ast, Object o); // TODO;
+  Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o);
 
   // Array Aggregates
   Object visitMultipleArrayAggregate(MultipleArrayAggregate ast, Object o);

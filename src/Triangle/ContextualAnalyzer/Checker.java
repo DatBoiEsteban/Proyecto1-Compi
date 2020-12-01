@@ -34,7 +34,7 @@ public final class Checker implements Visitor {
       reporter.reportError ("LHS of assignment is not a variable", "", ast.V.position);
     if (! eType.equals(vType))
       reporter.reportError ("assignment incompatibilty", "", ast.position);
-    return null;
+    return eType;
   }
 
 
@@ -135,13 +135,18 @@ public final class Checker implements Visitor {
       ast.type = StdEnvironment.errorType;
     } else if (binding instanceof FuncDeclaration) {
       ast.APS.visit(this, ((FuncDeclaration) binding).FPS);
-      ast.type = ((FuncDeclaration) binding).T;
+      ast.type =(TypeDenoter) ((FuncDeclaration) binding).T.visit(this,null); //todo le temes a la muerte Jack Sparrow?
     } else if (binding instanceof FuncFormalParameter) {
       ast.APS.visit(this, ((FuncFormalParameter) binding).FPS);
       ast.type = ((FuncFormalParameter) binding).T;
-    } else
+    } else if (binding instanceof ProcDeclaration) { // todo
+      ast.APS.visit(this, ((ProcDeclaration) binding).FPS);
+      ast.type = (TypeDenoter) ((ProcDeclaration) binding).C.visit(this, null);
+    } else {
       reporter.reportError("\"%\" is not a function identifier",
-                           ast.I.spelling, ast.I.position);
+              ast.I.spelling, ast.I.position);
+    }
+
     return ast.type;
   }
 
@@ -229,52 +234,64 @@ public final class Checker implements Visitor {
   }
 
   public Object visitFuncDeclaration(FuncDeclaration ast, Object o) {
-    ast.T = (TypeDenoter) ast.T.visit(this, null);
-    idTable.enter(ast.I.spelling, ast);
-
-    if (ast.duplicated)
+    FuncDeclaration entry = (FuncDeclaration) idTable.retrieve(ast.I.spelling);
+    if (entry == null) {
+      idTable.enter (ast.I.spelling, ast); // permits recursion
+      entry = (FuncDeclaration) idTable.retrieve(ast.I.spelling);
+    }
+    entry.T = (TypeDenoter) entry.T.visit(this, null);
+    if (entry.duplicated)
       reporter.reportError ("identifier \"%\" already declared",
-                            ast.I.spelling, ast.position);
+                            entry.I.spelling, entry.position);
     idTable.openScope();
-    ast.FPS.visit(this, null);
-    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+    entry.FPS.visit(this, null);
+    TypeDenoter eType = (TypeDenoter) entry.E.visit(this, null);
     idTable.closeScope();
-    if (! ast.T.equals(eType))
+    if (! entry.T.equals(eType))
       reporter.reportError ("body of function \"%\" has wrong type",
-                            ast.I.spelling, ast.E.position);
+                            entry.I.spelling, entry.E.position);
     return null;
   }
 
   public Object visitProcDeclaration(ProcDeclaration ast, Object o) {
+    ProcDeclaration entry = (ProcDeclaration) idTable.retrieve(ast.I.spelling);
+    if (entry == null) {
+      idTable.enter (ast.I.spelling, ast); // permits recursion
+      entry = (ProcDeclaration) idTable.retrieve(ast.I.spelling);
+    }
 
-    idTable.enter (ast.I.spelling, ast); // permits recursion
-    if (ast.duplicated)
+    if (entry.duplicated)
       reporter.reportError ("identifier \"%\" already declared",
-                            ast.I.spelling, ast.position);
+                            entry.I.spelling, entry.position);
     idTable.openScope();
-    ast.FPS.visit(this, null);
-    ast.C.visit(this, null);
+    entry.FPS.visit(this, null);
+    entry.C.visit(this, null);
     idTable.closeScope();
     return null;
   }
 
+  public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
+    if (ast.D1 instanceof FuncDeclaration) {
+      idTable.enter(((FuncDeclaration)ast.D1).I.spelling, ast.D1);
+    } else {
+      idTable.enter(((ProcDeclaration)ast.D1).I.spelling, ast.D1);
+    }
+
+    if(ast.D2 instanceof RecursiveDeclaration){
+      ast.D2.visit(this, null);
+    } else if (ast.D2 instanceof FuncDeclaration){
+      idTable.enter(((FuncDeclaration)ast.D2).I.spelling, ast.D2);
+    } else {
+      idTable.enter(((ProcDeclaration)ast.D2).I.spelling, ast.D2);
+    }
+    ast.D1.visit(this, null);
+    if (!(ast.D2 instanceof RecursiveDeclaration)){
+      ast.D2.visit(this, null);
+    }
+    return null;
+  }
+
   public Object visitSequentialDeclaration(SequentialDeclaration ast, Object o) {
-//    if (ast.D1 instanceof FuncDeclaration) {
-//      idTable.enter(((FuncDeclaration)ast.D1).I.spelling, ast.D1);
-//    } else if (ast.D1 instanceof ProcDeclaration) {
-//      idTable.enter(((ProcDeclaration)ast.D1).I.spelling, ast.D1);
-//    }
-//
-//    if (ast.D2 instanceof SequentialDeclaration) {
-//      ast.D2.visit(this,null);
-//    } else if (ast.D2 instanceof FuncDeclaration) {
-//      idTable.enter(((FuncDeclaration)ast.D2).I.spelling, ast.D2);
-//    } else {
-//      idTable.enter(((ProcDeclaration)ast.D2).I.spelling, ast.D2);
-//    }
-
-
-
     ast.D1.visit(this, null);
     ast.D2.visit(this, null);
     return null;
@@ -513,7 +530,7 @@ public final class Checker implements Visitor {
     else if (! (fp instanceof VarFormalParameter))
       reporter.reportError ("var actual parameter not expected here", "",
                             ast.V.position);
-    else if (! vType.equals(((VarFormalParameter) fp).T))
+    else if (! vType.equals(((VarFormalParameter) fp).T.visit(this, null))) // todo jugada peligrosa
       reporter.reportError ("wrong type for var actual parameter", "",
                             ast.V.position);
     return null;

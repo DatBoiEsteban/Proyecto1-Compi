@@ -736,7 +736,7 @@ public class Parser {
         start(declarationPos);
 
         Declaration d2AST = parseProcFuncDeclaration();
-        declarationAST = new SequentialDeclaration(d2AST, parseRestOfProcFuncsDeclaration(), declarationPos);
+        declarationAST = new RecursiveDeclaration(d2AST, parseRestOfProcFuncsDeclaration(), declarationPos);
         finish(declarationPos);
         return declarationAST;
     }
@@ -748,7 +748,7 @@ public class Parser {
         accept(Token.PIPE);
         declarationAST = parseProcFuncDeclaration();
         if(currentToken.kind == Token.PIPE)
-            declarationAST = new SequentialDeclaration(declarationAST, parseRestOfProcFuncsDeclaration(), declarationPos);
+            declarationAST = new RecursiveDeclaration(declarationAST, parseRestOfProcFuncsDeclaration(), declarationPos);
         return declarationAST;
     }
 

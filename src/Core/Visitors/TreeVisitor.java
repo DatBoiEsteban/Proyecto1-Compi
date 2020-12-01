@@ -137,13 +137,18 @@ public class TreeVisitor implements Visitor {
     }
 
     @Override
-    public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) { // TODO;
+    public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) {
         return (createBinary( "Initialized Variable Declaration", ast.I, ast.E));
     }
 
     @Override
-    public Object visitLocalDeclaration(LocalDeclaration ast, Object o) { // TODO;
+    public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
         return (createBinary("Local Declaration", ast.d1, ast.d2));
+    }
+
+    @Override
+    public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
+        return (createBinary("Recursive Declaration", ast.D1, ast.D2));
     }
     // </editor-fold>
     

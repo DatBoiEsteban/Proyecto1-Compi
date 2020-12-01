@@ -257,6 +257,9 @@ public class TableVisitor implements Visitor {
         return null;
     }
 
+    public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
+        return null;
+    }
     // </editor-fold>
 
   // <editor-fold defaultstate="collapsed" desc=" Aggregates ">

@@ -148,6 +148,11 @@ public class LayoutVisitor implements Visitor {
     return null;
   }
 
+  @Override
+  public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) { //Todo;
+    return null;
+  }
+
 
   // Array Aggregates
   public Object visitMultipleArrayAggregate(MultipleArrayAggregate ast, Object obj) {

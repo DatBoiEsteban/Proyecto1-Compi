@@ -241,6 +241,15 @@ public class WriterVisitor implements Visitor {// TODO
         return null;
     }
 
+    @Override
+    public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
+        writeLineXML("<RecursiveDeclaration>");
+        ast.D1.visit(this, null);
+        ast.D2.visit(this, null);
+        writeLineXML("</RecursiveDeclaration>");
+        return null;
+    }
+
 
     // Array Aggregates
     public Object visitMultipleArrayAggregate(MultipleArrayAggregate ast, Object obj) {
