@@ -39,30 +39,39 @@ public final class IdentificationTable {
 
   public void closeScope () {
 
-    IdEntry entry, local;
+    IdEntry entry, local, temp;
 
     // Presumably, idTable.level > 0.
     entry = this.latest;
-    while (entry.level == this.level) {
+    temp = this.latest;
+    boolean scopeLocal = this.isLocal(entry);
+    while (entry.level == this.level || scopeLocal) {
       local = entry;
       entry = local.previous;
-    }
-    this.level--;
-    this.latest = entry;
-  }
-
-  private boolean isLocal() {
-    IdEntry entry = this.latest;
-    boolean found = false;
-    while (entry.level != this.level) {
-      if (entry.previous != null) {
-        entry = entry.previous;
+      if (scopeLocal && !(entry.level == this.level)) {
+        temp = entry;
+        scopeLocal = this.isLocal(entry);
       } else {
-        break;
+        scopeLocal = false;
       }
     }
-    if (entry.id.equals("local")) {
-      found = true;
+    this.level--;
+    if (temp != entry) {
+      temp.previous = entry;
+    }
+    while (this.latest.level > this.level) {
+      this.latest = this.latest.previous;
+    }
+  }
+
+  private boolean isLocal(IdEntry entry) {
+    boolean found = false;
+    while (entry.previous != null && this.level - entry.level <= 1) {
+      if (entry.previous.level > entry.level || entry.id.equals("local")) {
+        found = true;
+        break;
+      }
+      entry = entry.previous;
     }
     return found;
   }
@@ -78,7 +87,7 @@ public final class IdentificationTable {
     IdEntry entry = this.latest;
     int offset = 0;
     if (entry != null && (entry.level < this.level || entry.id.equals("local"))) {
-      if (this.isLocal()) {
+      if (this.isLocal(this.latest)) {
         offset = 1;
       }
     }

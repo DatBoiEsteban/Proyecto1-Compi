@@ -234,11 +234,11 @@ public final class Checker implements Visitor {
   }
 
   public Object visitFuncDeclaration(FuncDeclaration ast, Object o) {
-    FuncDeclaration entry = (FuncDeclaration) idTable.retrieve(ast.I.spelling);
-    if (entry == null) {
-      idTable.enter (ast.I.spelling, ast); // permits recursion
-      entry = (FuncDeclaration) idTable.retrieve(ast.I.spelling);
+    FuncDeclaration entry = null;
+    if (o == null) {
+      idTable.enter(ast.I.spelling, ast); // permits recursion
     }
+    entry = (FuncDeclaration) idTable.retrieve(ast.I.spelling);
     entry.T = (TypeDenoter) entry.T.visit(this, null);
     if (entry.duplicated)
       reporter.reportError ("identifier \"%\" already declared",
@@ -254,12 +254,11 @@ public final class Checker implements Visitor {
   }
 
   public Object visitProcDeclaration(ProcDeclaration ast, Object o) {
-    ProcDeclaration entry = (ProcDeclaration) idTable.retrieve(ast.I.spelling);
-    if (entry == null) {
-      idTable.enter (ast.I.spelling, ast); // permits recursion
-      entry = (ProcDeclaration) idTable.retrieve(ast.I.spelling);
+    ProcDeclaration entry = null;
+    if (o == null) {
+      idTable.enter(ast.I.spelling, ast); // permits recursion
     }
-
+    entry = (ProcDeclaration) idTable.retrieve(ast.I.spelling);
     if (entry.duplicated)
       reporter.reportError ("identifier \"%\" already declared",
                             entry.I.spelling, entry.position);
@@ -284,9 +283,9 @@ public final class Checker implements Visitor {
     } else {
       idTable.enter(((ProcDeclaration)ast.D2).I.spelling, ast.D2);
     }
-    ast.D1.visit(this, null);
+    ast.D1.visit(this, "Recursive");
     if (!(ast.D2 instanceof RecursiveDeclaration)){
-      ast.D2.visit(this, null);
+      ast.D2.visit(this, "Recursive");
     }
     return null;
   }
@@ -455,7 +454,7 @@ public final class Checker implements Visitor {
     if (! (fp instanceof ConstFormalParameter))
       reporter.reportError ("const actual parameter not expected here", "",
                             ast.position);
-    else if (! eType.equals(((ConstFormalParameter) fp).T))
+    else if (eType == null ||! eType.equals(((ConstFormalParameter) fp).T.visit(this,null))) // TODO le temes a la muerte Jack Sparrow?
       reporter.reportError ("wrong type for const actual parameter", "",
                             ast.E.position);
     return null;
@@ -704,10 +703,12 @@ public final class Checker implements Visitor {
         ast.type = ((VarFormalParameter) binding).T;
         ast.variable = true;
       } else if (binding instanceof InitializedVarDeclaration) {
-        ast.type = ((InitializedVarDeclaration)binding).E.type;
+        ast.type = ((InitializedVarDeclaration) binding).E.type;
         ast.variable = true;
-      }
-      else
+      }else if (binding instanceof ForDeclaration) {
+        ast.type = ((ForDeclaration) binding).E.type;
+        ast.variable = false;
+      } else
         reporter.reportError ("\"%\" is not a const or var identifier",
                               ast.I.spelling, ast.I.position);
     return ast.type;
@@ -739,19 +740,11 @@ public final class Checker implements Visitor {
 
   @Override
   public Object visitForDeclaration(ForDeclaration ast, Object o) {
-    TypeDenoter iType = (TypeDenoter) ast.I.visit(this, null);
-    if (! iType.equals(StdEnvironment.integerType))
-      reporter.reportError("Integer identifier expected", "", ast.I.position);
-    //aqui se declara el id de tipo int.
     idTable.enter(ast.I.spelling, ast);
     if (ast.duplicated)
       reporter.reportError ("identifier \"%\" is already declared before",
               ast.I.spelling, ast.position);
     //validar que no haya un for dentro de otro for con el mismo identificador.
-    iType =(TypeDenoter) ast.E.visit(this, null);
-    if (! iType.equals(StdEnvironment.integerType))
-      reporter.reportError("Integer identifier expected", "", ast.E.position);
-    //visitar la expresion
     return null;
   }
 
@@ -801,12 +794,15 @@ public final class Checker implements Visitor {
 
   @Override
   public Object visitForCommand(ForCommand ast, Object o) {
-    ast.FD.visit(this, null);
     TypeDenoter e1Type = (TypeDenoter) ast.E2.visit(this, null);
+    TypeDenoter e2Type = (TypeDenoter) ast.FD.E.visit(this, null);
     if (! e1Type.equals(StdEnvironment.integerType))
       reporter.reportError("Integer expression expected here", "", ast.E2.position);
+    if (! e2Type.equals(StdEnvironment.integerType))
+      reporter.reportError("Integer identifier expected here", "", ast.FD.E.position);
+
     idTable.openScope();
-    ast.FD.I.visit(this, null);
+    ast.FD.visit(this, null);
     ast.C1.visit(this, null);
     idTable.closeScope();
     return null;
