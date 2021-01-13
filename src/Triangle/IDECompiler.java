@@ -5,6 +5,7 @@
 
 package Triangle;
 
+import Triangle.CodeGenerator.Encoder;
 import Triangle.ContextualAnalyzer.Checker;
 import Triangle.XMLWriter.Writer;
 import Triangle.SyntacticAnalyzer.SourceFile;
@@ -56,26 +57,27 @@ public class IDECompiler {
             Checker checker = new Checker(report);
             checker.check(rootAST);
             if (report.numErrors == 0) {
-                // System.out.println("Code Generation ...");
-                // Encoder encoder = new Encoder(report);
-                // encoder.encodeRun(rootAST, false);
+                System.out.println("Code Generation ...");
+                Encoder encoder = new Encoder(report);
+                encoder.encodeRun(rootAST, false);
 
                 if (report.numErrors == 0) {
-                    // encoder.saveObjectProgram(sourceName.replace(".tri", ".tam"));
+                    encoder.saveObjectProgram(sourceName.replace(".tri", ".tam"));
                     success = true;
                 }
             }
         }
 
-        if (success) {// En caso de que la compilacion funcione, se generan los archivos HTML y XML
+        if (success) {// En caso de que la compilacion funcione
             System.out.println("Compilation was successful.");
-            System.out.println("Generating html file...");
-            scanner.finishWriting();
-            Writer w = new Writer(sourceName, sourceName.replace("tri", "xml"));
-            w.write(getAST());
-            System.out.println("Generating XML file...");
         } else
             System.out.println("Compilation was unsuccessful.");
+
+        System.out.println("Generating html file...");
+        scanner.finishWriting();
+        Writer w = new Writer(sourceName, sourceName.replace("tri", "xml"));
+        w.write(getAST());
+        System.out.println("Generating XML file...");
 
         return (success);
     }
