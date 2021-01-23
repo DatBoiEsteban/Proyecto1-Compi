@@ -726,6 +726,10 @@ public final class Checker implements Visitor {
           reporter.reportError ("Integer expression expected here", "",
 				ast.E.position);
         ast.type = ((ArrayTypeDenoter) vType).T;
+        if(ast.E instanceof  IntegerExpression) {
+          if (Integer.parseInt(((IntegerExpression)ast.E).IL.spelling) >= Integer.parseInt(((ArrayTypeDenoter)vType).IL.spelling))
+            reporter.reportError("index out of range", "", ast.position);
+        }
       }
     }
     return ast.type;
